@@ -12,7 +12,7 @@ const productos = new Productos();
 router.post('/guardar', (req, res) => {
     productos.guardar(req.body.title, req.body.price, req.body.thumbnail);
     return res.json({ estado: 'GUARDADO' });
-})
+});
 
 router.get('/listar/:id', (req, res) => {
     let id = req.params.id;
@@ -23,7 +23,7 @@ router.get('/listar/:id', (req, res) => {
         res.json(producto)
     }
 
-})
+});
 
 router.get('/listar', (req, res) => {
     let listado = productos.getProductos();
@@ -34,12 +34,12 @@ router.get('/listar', (req, res) => {
     }
 
 
-})
+});
 
 router.delete('/borrar/:id', (req, res) => {
     return res.json({ estado: 'BORRADO' });
 
-})
+});
 
 
 /* router.put('/actualizar/:id', (req, res) => {

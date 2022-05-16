@@ -5,9 +5,11 @@ const router = express.Router();
 // App Express
 const app = express();
 
+
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
 // Settings
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 
 app.set('views', './views');
 app.set('view engine', 'pug');
@@ -15,8 +17,13 @@ app.set('view engine', 'pug');
 
 // Routes
 app.get('/', (req, res) => {
-    const items = products.viewAll()
-    res.render('formulario', { items: items, mensaje: 'No hay productos' });
+    const productos = products.viewAll()
+    console.log('productos', productos)
+    if (productos.length > 0) {
+        res.render('tabla', { productos: products.viewAll(), productsExists: true })
+    } else {
+        res.render('tabla', { productos: products.viewAll(), productsExists: false })
+    }
 });
 
 router.post('/productos/guardar', (req, res) => {
@@ -24,18 +31,7 @@ router.post('/productos/guardar', (req, res) => {
     products.addProduct(req.body)
 
     res.redirect('/');
-})
-
-app.get('/productos/vista', (req, res) => {
-
-    const items = products.viewAll()
-    console.log(items)
-    if (items.length > 0) {
-        res.render('vista', { items: products.viewAll(), productsExists: true })
-    } else {
-        res.render('vista', { items: products.viewAll(), productsExists: false })
-    }
-})
+});
 
 app.use('/api', router);
 
@@ -49,7 +45,7 @@ router.get('/productos/listar', (req, res) => {
             error: 'No hay productos cargados'
         })
     }
-})
+});
 
 router.get('/productos/listar/:id', (req, res) => {
 
@@ -62,8 +58,7 @@ router.get('/productos/listar/:id', (req, res) => {
             error: 'El producto no fue encontrado'
         })
     }
-})
-
+});
 
 
 router.put('/productos/actualizar/:id', (req, res) => {
@@ -75,7 +70,7 @@ router.put('/productos/actualizar/:id', (req, res) => {
             error: 'El producto no fue encontrado'
         })
     }
-})
+});
 
 router.delete('/productos/borrar/:id', (req, res) => {
     const item = products.deleteProduct(req.params.id)
@@ -87,7 +82,7 @@ router.delete('/productos/borrar/:id', (req, res) => {
             error: 'El producto no fue encontrado'
         })
     }
-})
+});
 
 // Server
 const PORT = 8080;
